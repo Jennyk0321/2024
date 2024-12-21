@@ -1,2 +1,4 @@
 koreanize_matplotlib
 plotly
+matplotlib
+pyplot
