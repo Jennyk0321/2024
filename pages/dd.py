@@ -1,11 +1,8 @@
 import streamlit as st
 import pandas as pd
-import os
-
-# matplotlib이 설치되어 있다고 가정하고 오류 처리 제거
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Agg')  # Streamlit에서 오류 방지용
+matplotlib.use('Agg')  # Streamlit과의 호환성을 위한 설정
 
 # 데이터 로드
 file_path = 'info_collection.xlsx'
@@ -72,19 +69,6 @@ def dataset_analysis(data):
         ax.set_xlabel(column)
         ax.set_ylabel("Frequency")
         st.pyplot(fig)
-
-    st.write("### 상관관계 히트맵")
-    if len(numeric_columns) > 1:
-        fig, ax = plt.subplots()
-        cax = ax.matshow(data[numeric_columns].corr(), cmap='coolwarm')
-        fig.colorbar(cax)
-        ax.set_xticks(range(len(numeric_columns)))
-        ax.set_yticks(range(len(numeric_columns)))
-        ax.set_xticklabels(numeric_columns, rotation=90)
-        ax.set_yticklabels(numeric_columns)
-        st.pyplot(fig)
-    else:
-        st.write("상관관계 히트맵을 생성하기에 충분한 수치형 열이 없습니다.")
 
     st.write("### 범주형 변수 분석")
     categorical_columns = data.select_dtypes(include=['object']).columns
