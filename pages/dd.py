@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+
+# Matplotlib 백엔드 설정 (Streamlit에서 오류 방지)
+import matplotlib
+matplotlib.use('Agg')
 
 # 데이터 로드
 file_path = 'info_collection.xlsx'
@@ -90,4 +95,3 @@ def dataset_analysis(data):
 
 if __name__ == "__main__":
     main()
-
