@@ -1,8 +1,14 @@
 import streamlit as st
 import pandas as pd
+import os
+
+# matplotlib 및 한글 지원 라이브러리 import
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Agg')  # Streamlit과의 호환성을 위한 설정
+from koreanize_matplotlib import koreanize_matplotlib
+
+matplotlib.use('Agg')  # Streamlit에서 오류 방지용
+koreanize_matplotlib()  # 한글 폰트 설정
 
 # 데이터 로드
 file_path = 'info_collection.xlsx'
@@ -65,10 +71,23 @@ def dataset_analysis(data):
         st.write(f"#### {column} 분포")
         fig, ax = plt.subplots()
         ax.hist(data[column], bins=30, alpha=0.7)
-        ax.set_title(f"{column} Distribution")
+        ax.set_title(f"{column} 분포")
         ax.set_xlabel(column)
-        ax.set_ylabel("Frequency")
+        ax.set_ylabel("빈도")
         st.pyplot(fig)
+
+    st.write("### 상관관계 히트맵")
+    if len(numeric_columns) > 1:
+        fig, ax = plt.subplots()
+        cax = ax.matshow(data[numeric_columns].corr(), cmap='coolwarm')
+        fig.colorbar(cax)
+        ax.set_xticks(range(len(numeric_columns)))
+        ax.set_yticks(range(len(numeric_columns)))
+        ax.set_xticklabels(numeric_columns, rotation=90)
+        ax.set_yticklabels(numeric_columns)
+        st.pyplot(fig)
+    else:
+        st.write("상관관계 히트맵을 생성하기에 충분한 수치형 열이 없습니다.")
 
     st.write("### 범주형 변수 분석")
     categorical_columns = data.select_dtypes(include=['object']).columns
@@ -77,11 +96,12 @@ def dataset_analysis(data):
         value_counts = data[column].value_counts()
         fig, ax = plt.subplots()
         ax.bar(value_counts.index, value_counts.values, alpha=0.7)
-        ax.set_title(f"{column} Value Counts")
+        ax.set_title(f"{column} 값 분포")
         ax.set_xlabel(column)
-        ax.set_ylabel("Count")
+        ax.set_ylabel("개수")
         st.pyplot(fig)
 
 
 if __name__ == "__main__":
     main()
+
