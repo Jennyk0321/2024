@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-# Matplotlib 백엔드 설정 (Streamlit에서 오류 방지)
+# matplotlib이 설치되어 있다고 가정하고 오류 처리 제거
+import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('Agg')  # Streamlit에서 오류 방지용
 
 # 데이터 로드
 file_path = 'info_collection.xlsx'
