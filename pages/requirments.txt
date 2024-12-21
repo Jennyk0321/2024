@@ -1,2 +1,7 @@
 koreanize_matplotlib
 plotly
+matplotlib
+matplot.pyplot
+pyplot
+seaborn
+
