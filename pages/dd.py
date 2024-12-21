@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns
 import os
 
 # matplotlib이 설치되어 있다고 가정하고 오류 처리 제거
@@ -68,29 +67,36 @@ def dataset_analysis(data):
     for column in numeric_columns:
         st.write(f"#### {column} 분포")
         fig, ax = plt.subplots()
-        sns.histplot(data[column], kde=True, ax=ax)
+        ax.hist(data[column], bins=30, alpha=0.7)
+        ax.set_title(f"{column} Distribution")
+        ax.set_xlabel(column)
+        ax.set_ylabel("Frequency")
         st.pyplot(fig)
 
     st.write("### 상관관계 히트맵")
     if len(numeric_columns) > 1:
         fig, ax = plt.subplots()
-        sns.heatmap(data[numeric_columns].corr(), annot=True, cmap='coolwarm', ax=ax)
+        cax = ax.matshow(data[numeric_columns].corr(), cmap='coolwarm')
+        fig.colorbar(cax)
+        ax.set_xticks(range(len(numeric_columns)))
+        ax.set_yticks(range(len(numeric_columns)))
+        ax.set_xticklabels(numeric_columns, rotation=90)
+        ax.set_yticklabels(numeric_columns)
         st.pyplot(fig)
     else:
         st.write("상관관계 히트맵을 생성하기에 충분한 수치형 열이 없습니다.")
-
-    st.write("### 변수 간 관계 (Pairplot)")
-    if len(numeric_columns) > 1:
-        pairplot_fig = sns.pairplot(data[numeric_columns])
-        st.pyplot(pairplot_fig)
-    else:
-        st.write("Pairplot을 생성하기에 충분한 수치형 열이 없습니다.")
 
     st.write("### 범주형 변수 분석")
     categorical_columns = data.select_dtypes(include=['object']).columns
     for column in categorical_columns:
         st.write(f"#### {column} 값 분포")
-        st.bar_chart(data[column].value_counts())
+        value_counts = data[column].value_counts()
+        fig, ax = plt.subplots()
+        ax.bar(value_counts.index, value_counts.values, alpha=0.7)
+        ax.set_title(f"{column} Value Counts")
+        ax.set_xlabel(column)
+        ax.set_ylabel("Count")
+        st.pyplot(fig)
 
 
 if __name__ == "__main__":
